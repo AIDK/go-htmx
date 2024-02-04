@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"text/template"
@@ -32,8 +33,26 @@ func main() {
 		}
 	}
 
+	h2 := func(w http.ResponseWriter, r *http.Request) {
+
+		// Get the form values from the request body
+		// The form values are sent as part of the request body
+		// The request body is read by the server and the form values are extracted
+		// The form values are then made available to the server as part of the request
+		title := r.PostFormValue("title")
+		director := r.PostFormValue("director")
+
+		htmlStr := fmt.Sprintf("<li class='list-group-item bg-primary text-white'>%s - %s</li>", title, director)
+		tmpl, _ := template.New("t").Parse(htmlStr)
+		tmpl.Execute(w, nil)
+
+		// HX-Request header is set to "true" when the request is made by HTMX
+		// log.Println(r.Header.Get("HX-Request"))
+	}
+
 	// Create a handler which uses the function
 	http.HandleFunc("/", h1)
+	http.HandleFunc("/add-film/", h2)
 
 	log.Println("Server started on: http://localhost:8000")
 
