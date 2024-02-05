@@ -29,6 +29,8 @@ func main() {
 				{Title: "Casablanca", Director: "Michael Curtiz"},
 				{Title: "Cool Hand Luke", Director: "Stuart Rosenberg"},
 				{Title: "Bullitt", Director: "Peter Yates"},
+				{Title: "The Godfather", Director: "Francis Ford Coppola"},
+				{Title: "The French Connection", Director: "William Friedkin"},
 			},
 		}
 
