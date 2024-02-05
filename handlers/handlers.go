@@ -1,10 +1,10 @@
 package handlers
 
 import (
-	"fmt"
 	"go-htmx/types"
 	"html/template"
 	"net/http"
+	"time"
 )
 
 func Home(w http.ResponseWriter, r *http.Request) {
@@ -17,13 +17,7 @@ func Home(w http.ResponseWriter, r *http.Request) {
 		- If the error is nil, the Must function returns the pointer to the template
 		- The Must function is used to simplify error handling
 	*/
-	tmpl, err := template.ParseFiles("index.html")
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
-	// tmpl := template.Must(template.ParseFiles("/index.html"))
+	tmpl := template.Must(template.ParseFiles("index.html"))
 
 	/*
 		NOTE
@@ -51,21 +45,16 @@ func Home(w http.ResponseWriter, r *http.Request) {
 
 func AddMovie(w http.ResponseWriter, r *http.Request) {
 
+	time.Sleep(1 * time.Second)
 	// Get the form values from the request and assign them to variables
 	title := r.PostFormValue("title")       // title is the name attribute of the input element in the form
 	director := r.PostFormValue("director") // director is the name attribute of the input element in the form
 
-	// Create an HTML string using the form values and a template
-	htmlStr := fmt.Sprintf("<li class='list-group-item bg-primary text-white'>%s - %s</li>", title, director)
-
-	// Create a new template and parse the HTML string into it using the Parse method
-	tmpl, err := template.New("t").Parse(htmlStr)
-	if err != nil {
-		// If there was an error, use the http.Error method to send a 500 internal server error response to the client
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-
+	// Create a new template and parse the movie-list-element template
+	tmpl := template.Must(template.ParseFiles("index.html"))
 	// Execute the template and write it to the http.ResponseWriter
-	tmpl.Execute(w, nil)
+	tmpl.ExecuteTemplate(w, "movie-list-element", types.Movies{
+		Title:    title,
+		Director: director,
+	})
 }
